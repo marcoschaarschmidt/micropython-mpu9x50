@@ -27,7 +27,7 @@ the IMU classes.
   It will update the ``Vector3d()`` internal ``_vector[]`` and ``_ivector[]`` lists.
 
 ``calibrate()`` Optional method to enable fixed offsets to be stored and allowed for. Arguments:
-  1. Stop function: routine will run until this passed function returns ``False``.
+  1. Time in milliseconds: routine will run for the given time.
   2. Wait function: Optional. Default is a 50mS delay between readings. User can supply
   an alternative, for example a thread-aware delay in cooperative multitasking environments.
 

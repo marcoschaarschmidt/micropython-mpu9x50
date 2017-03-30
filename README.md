@@ -279,9 +279,8 @@ power cycle is required to clear it.
 >>> a = MPU9250('x')
 >>> a.mag.cal
 (0, 0, 0)
->>> import pyb
->>> sw = pyb.Switch()
->>> a.mag.calibrate(sw) # User rotates unit about each axis then presses the Pyboard switch
+>>> time_in_ms = 10000
+>>> a.mag.calibrate(time_in_ms) # Due to the lack of a button the user is forced to rotate unit about each axis inbetween the give time in ms
 >>> a.mag.cal
 (35.30567, 18.92022, -9.428905)
 >>>

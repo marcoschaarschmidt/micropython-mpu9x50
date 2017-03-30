@@ -37,7 +37,8 @@ THE SOFTWARE.
 # At runtime try to continue returning last good data value. We don't want aircraft
 # crashing. However if the I2C has crashed we're probably stuffed.
 
-import pyb
+import utime
+from machine import I2C
 from vector3d import Vector3d
 
 
@@ -67,7 +68,7 @@ class InvenSenseMPU(object):
 
     _I2Cerror = "I2C failure when communicating with IMU"
 
-    def __init__(self, side_str, device_addr, transposition, scaling):
+    def __init__(self, device_addr, transposition, scaling):
 
         self._accel = Vector3d(transposition, scaling, self._accel_callback)
         self._gyro = Vector3d(transposition, scaling, self._gyro_callback)
@@ -77,17 +78,11 @@ class InvenSenseMPU(object):
         self.buf6 = bytearray([0]*6)
         self.timeout = 10                       # I2C tieout mS
 
-        tim = pyb.millis()                      # Ensure PSU and device have settled
+        tim = utime.ticks_ms()                      # Ensure PSU and device have settled
         if tim < 200:
-            pyb.delay(200-tim)
-        if type(side_str) is str:
-            sst = side_str.upper()
-            if sst in {'X', 'Y'}:
-                self._mpu_i2c = pyb.I2C(sst, pyb.I2C.MASTER)
-            else:
-                raise ValueError('I2C side must be X or Y')
-        elif type(side_str) is pyb.I2C:
-            self._mpu_i2c = side_str
+            utime.sleep_ms(200-tim)
+
+        self._mpu_i2c = i2c = I2C(0, I2C.MASTER)
 
         if device_addr is None:
             devices = set(self._mpu_i2c.scan())
@@ -116,14 +111,18 @@ class InvenSenseMPU(object):
         '''
         Read bytes to pre-allocated buffer Caller traps OSError.
         '''
-        self._mpu_i2c.mem_read(buf, addr, memaddr, timeout=self.timeout)
+        #self._mpu_i2c.mem_read(buf, addr, memaddr, timeout=self.timeout)
+        buf2 = self._mpu_i2c.readfrom_mem(addr, memaddr, len(buf))
+        for i in range(0,len(buf)):
+        	buf[i] = buf2[i]
 
     # write to device
     def _write(self, data, memaddr, addr):
         '''
         Perform a memory write. Caller should trap OSError.
         '''
-        self._mpu_i2c.mem_write(data, addr, memaddr, timeout=self.timeout)
+        #self._mpu_i2c.mem_write(data, addr, memaddr, timeout=self.timeout)
+        self._mpu_i2c.writeto_mem(addr, memaddr, bytearray([data]))
 
     # wake
     def wake(self):

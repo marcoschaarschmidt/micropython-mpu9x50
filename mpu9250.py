@@ -43,9 +43,9 @@ class MPU9250(InvenSenseMPU):
     _mag_addr = 12          # Magnetometer address
     _chip_id = 113
 
-    def __init__(self, side_str, device_addr=None, transposition=(0, 1, 2), scaling=(1, 1, 1)):
+    def __init__(self, device_addr=None, transposition=(0, 1, 2), scaling=(1, 1, 1)):
 
-        super().__init__(side_str, device_addr, transposition, scaling)
+        super().__init__(device_addr, transposition, scaling)
         self._mag = Vector3d(transposition, scaling, self._mag_callback)
         self.accel_filter_range = 0             # fast filtered response
         self.gyro_filter_range = 0

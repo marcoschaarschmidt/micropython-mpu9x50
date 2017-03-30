@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
-import pyb
+import time
 from math import sqrt, degrees, acos, atan2
 
 
@@ -31,7 +31,7 @@ def default_wait():
     '''
     delay of 50 ms
     '''
-    pyb.delay(50)
+    time.sleep_ms(50)
 
 
 class Vector3d(object):
@@ -59,14 +59,15 @@ class Vector3d(object):
         if len(arg) != 3 or not (type(arg) is list or type(arg) is tuple):
             raise ValueError(name + ' must be a 3 element list or tuple')
 
-    def calibrate(self, stopfunc, waitfunc=default_wait):
+    def calibrate(self, time_in_ms, waitfunc=default_wait):
         '''
         calibration routine, sets cal
         '''
+        stop_time = time.ticks_ms()
         self.update()
-        maxvec = self._vector[:]                # Initialise max and min lists with current values
+        maxvec = self._vector[:] 
         minvec = self._vector[:]
-        while not stopfunc():
+        while (time.ticks_diff(stop_time, time.ticks_ms()) < time_in_ms) :
             waitfunc()
             self.update()
             maxvec = list(map(max, maxvec, self._vector))
