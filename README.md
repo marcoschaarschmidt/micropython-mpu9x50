@@ -274,12 +274,12 @@ power cycle is required to clear it.
 
 ```python
 >>> from  mpu9250 import MPU9250
->>> a = MPU9250('x')
->>> a.mag.cal
+>>> mpu = MPU9250()
+>>> mpu.mag.cal
 (0, 0, 0)
 >>> time_in_ms = 10000
->>> a.mag.calibrate(time_in_ms) # Due to the lack of a button the user is forced to rotate unit about each axis inbetween the give time in ms
->>> a.mag.cal
+>>> mpu.mag.calibrate(time_in_ms) # Due to the lack of a button the user is forced to rotate unit about each axis inbetween the give time in ms
+>>> mpu.mag.cal
 (35.30567, 18.92022, -9.428905)
 >>>
 ```
