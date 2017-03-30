@@ -1,8 +1,11 @@
+**THIS LIBRARY IS STILL WORK IN PROGESS**
+
 As of now, this repo holds:
 * vector3d - a vector class for IMU devices
 * imu - a base class for MPU9x50 devices
-* mpu9150 - a class for the MPU9150
 * mpu9250 - a class for the MPU9250
+
+The class for the MPU9150 is not ready to use at the moment.
 
 vector3d will eventually be spun out to serve as common starting point for other
 imu-device drivers.  
@@ -46,10 +49,10 @@ can be powered from 3.3V or 5V.
 
 ### Quickstart
 
-Example assuming an MPU9250 connected to 'X' I2C interface on the Pyboard:
+Example assuming an MPU9250 connected to the I2C interface on the WiPy 2.0 ESP32 board:
 ```python
 from mpu9250 import MPU9250
-imu = MPU9250('X')
+imu = MPU9250()
 print(imu.accel.xyz)
 print(imu.gyro.xyz)
 print(imu.mag.xyz)
@@ -260,11 +263,6 @@ Timeout for I2C operations.
 
 # Exception handling
 
-Incorrect values such as
-```python
-imu = MPU9250('Z')
-```
-will raise a ValueError with a meaningful error message.  
 When any communication with the IMU takes place it is possible for the I2C bus to lock up.
 This is normally a consequence of hardware failure such as the device being connected incorrectly
 or leads being too long. In this instance a custom MPUException will be raised with a
