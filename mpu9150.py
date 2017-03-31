@@ -24,14 +24,14 @@ THE SOFTWARE.
 
 from imu import InvenSenseMPU, bytes_toint, MPUException
 from vector3d import Vector3d
-import pyb
+import time
 
 
 def default_mag_wait():
     '''
     delay of 1ms
     '''
-    pyb.delay(1)
+    time.sleep_ms(1)
 
 
 class MPU9150(InvenSenseMPU):
@@ -53,9 +53,9 @@ class MPU9150(InvenSenseMPU):
     _mag_addr = 12
     _chip_id = 104
 
-    def __init__(self, side_str, device_addr=None, transposition=(0, 1, 2), scaling=(1, 1, 1)):
+    def __init__(self, device_addr=None, transposition=(0, 1, 2), scaling=(1, 1, 1)):
 
-        super().__init__(side_str, device_addr, transposition, scaling)
+        super().__init__(device_addr, transposition, scaling)
         self._mag = Vector3d(transposition, scaling, self._mag_callback)
         self.filter_range = 0           # fast filtered response
         self._mag_stale_count = 0       # Count of consecutive reads where old data was returned
